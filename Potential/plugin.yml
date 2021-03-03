@@ -1,0 +1,10 @@
+main: teru.Potential.Main
+api-version: 1.16
+name: Potential
+version: 1.0
+description: Add some potential on items
+author: TeruMiyanaga
+commands:
+  poten:
+    description: base command
+    usage: /poten

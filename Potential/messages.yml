@@ -1,0 +1,38 @@
+Messages:
+    Lores:
+        NRPG_LorePrefix: "&f〕"
+        Potential_LorePrefix: "&f➤"
+        LoreLine: "&f=============================="
+        ItemRankLorePrefix: "&f潛能等級: "
+        ResultItem: "&6&l潛能附加"
+
+    ItemRankLore:
+        Common: "&f普通"
+        Uncommon: "&b稀有"
+        Rare: "&d罕見"
+        Legendary: "&6傳說"
+
+    GUITitle: "&4裝備/武器潛能"
+
+    SystemMessages:
+        Prefix: "&a[&ePotential&a] "
+        OnlyPlayer: "&c玩家才能使用該指令"
+        SetItem: "&f已將此道具設定為: "
+        PotentialItem : "&a可附加潛能"
+        MaterialItem: "&e潛能素材"
+        SetMaterial: "&f已將此潛能素材設定為: "
+        NotAPotentialItem: "&c此道具無法附加潛能"
+        CheckItemPotential: "&f此道具的潛能等級為: "
+        TopRank: "&c此道具的潛能等級已經最高"
+        TopRank_Material: "&c此潛能素材的等級已經最高"
+        CheckMaterialPotential: "&f此潛能素材的等級為: "
+        NotAMaterial: "&c此道具非潛能素材"
+        Rankdown: "&c使用後有機率使裝備/武器的潛能等級降低"
+        NotRankdown: "&a使用後不會使裝備/武器的潛能等級降低"
+        ItemSlot: "&f欄位為: "
+        PotentialItemCantUseThisMaterial: "&c此道具無法使用此潛能素材"
+        ItemPotentialRankUp: "&a已提升此道具的潛能等級"
+        MaterialRankUp: "&a已提升此潛能素材的等級"
+    
+    
+    

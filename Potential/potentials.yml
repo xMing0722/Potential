@@ -1,0 +1,38 @@
+PotentialList:
+    potentials:
+        armor: "裝甲 + # %"
+        at: "抗性 + # %"
+        hp: "血量 + # %"
+        ad: "攻擊傷害 + # %"
+        as: "攻擊速度 + # %"
+        kr: "抗擊退機率 + # %"
+        ms: "移動速度 + # %"
+    range:
+        common:
+            max: 5
+            min: 1
+            up: 0.5
+            down: 0.0
+        uncommon:
+            max: 10
+            min: 6
+            up: 0.25
+            down: 0.05
+        rare:
+            max: 15
+            min: 11
+            up: 0.01
+            down: 0.05
+        legendary:
+            max: 20
+            min: 16
+            up: 0.0
+            down: 0.4
+    
+nrpg_support: true
+        
+        
+            
+        
+        
+    
