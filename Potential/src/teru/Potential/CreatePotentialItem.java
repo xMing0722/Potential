@@ -101,6 +101,10 @@ public class CreatePotentialItem implements Listener {
 	public static NamespacedKey p_attrUUID1 = new NamespacedKey(Main.getPlugin(), "Potential_attrUUID1");
 	public static NamespacedKey p_attrUUID2 = new NamespacedKey(Main.getPlugin(), "Potential_attrUUID2");
 	public static NamespacedKey p_attrUUID3 = new NamespacedKey(Main.getPlugin(), "Potential_attrUUID3");
+	
+	public static NamespacedKey p_LockItem = new NamespacedKey(Main.getPlugin(), "Potential_LockItem");
+	public static NamespacedKey p_lockResult = new NamespacedKey(Main.getPlugin(), "Potential_LockResult");
+	public static NamespacedKey p_lockline = new NamespacedKey(Main.getPlugin(), "Potential_LockLine");
 
 	private static ItemStack resultItem;
 
@@ -208,7 +212,6 @@ public class CreatePotentialItem implements Listener {
 			boolean flag3 = checkMaterialPotentialKey(currentItem);
 			if (!flag3) {
 				PersistentDataContainer pdcItem = currentItem.getItemMeta().getPersistentDataContainer();
-				System.out.println(pdcItem);
 				if(support && !pdcItem.has(p_equipSlot, PersistentDataType.INTEGER)) {
 					int i = CreateItem.getItemForgeSlot(currentItem);
 					if(i != -1) {
@@ -227,6 +230,7 @@ public class CreatePotentialItem implements Listener {
 
 			ItemStack is2 = inv.getItem(1);
 			boolean flag = true;
+			boolean lockFlag = false;
 
 			if (checkRankPotentialKey(is) - checkMaterialRankPotentialKey(is2) > 1) {
 				p.sendMessage(Commands.MessagePrefix + Commands.PotentialItemCantUseThisMaterial);
@@ -257,18 +261,27 @@ public class CreatePotentialItem implements Listener {
 				chance = materialRange.get("common");
 				break;
 			}
-
-			if (checkMaterialRankdownPotentialKey(is2)) {
-				if (checkRank(chance.getDown())) {
-					if (checkRankPotentialKey(is) > 1) {
-						im.getPersistentDataContainer().set(p_rank, PersistentDataType.BYTE,
-								(byte) (checkRankPotentialKey(is) - 1));
-						is.setItemMeta(im);
-						flag = false;
+			
+			if(im.getPersistentDataContainer().has(p_lockline, PersistentDataType.INTEGER)) {
+				flag = false;
+				lockFlag = true;
+			}
+			
+			System.out.println(lockFlag);
+			
+			if(!lockFlag) {
+				if (checkMaterialRankdownPotentialKey(is2)) {
+					if (checkRank(chance.getDown())) {
+						if (checkRankPotentialKey(is) > 1) {
+							im.getPersistentDataContainer().set(p_rank, PersistentDataType.BYTE,
+									(byte) (checkRankPotentialKey(is) - 1));
+							is.setItemMeta(im);
+							flag = false;
+						}
 					}
 				}
 			}
-
+			
 			if (checkRankPotentialKey(is) - checkMaterialRankPotentialKey(is2) == 1) {
 				flag = false;
 			}
@@ -517,6 +530,35 @@ public class CreatePotentialItem implements Listener {
 			return -1;
 		}
 	}
+	
+	public static boolean checkPotentialsKey(ItemStack is) {
+		if(is == null) {
+			return false;
+		}
+		PersistentDataContainer pdc = is.getItemMeta().getPersistentDataContainer();
+		if(pdc.has(p_attrUUID1, PersistentDataType.STRING)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public static void setLockKey(ItemStack is, int slot) {
+		ItemMeta im = is.getItemMeta();
+		PersistentDataContainer pdc = im.getPersistentDataContainer();
+		pdc.set(p_LockItem, PersistentDataType.INTEGER, slot);
+		is.setItemMeta(im);
+	}
+	
+	public static boolean checkLockKey(ItemStack is) {
+		if(is == null) {
+			return false;
+		}
+		PersistentDataContainer pdc = is.getItemMeta().getPersistentDataContainer();
+		if(pdc.has(p_LockItem, PersistentDataType.INTEGER)) {
+			return true;
+		}
+		return false;
+	}
 
 	public static void ConstructLore(ItemStack is, List<String> oldlore, List<String> potentialLore) {
 		List<String> totalLore = new ArrayList<String>();
@@ -540,21 +582,58 @@ public class CreatePotentialItem implements Listener {
 			totalLore.add(LoreLine);
 		}
 		switch (im.getPersistentDataContainer().get(p_rank, PersistentDataType.BYTE)) {
-		case 1:
-			totalLore.add(LorePrefix2 + rankPrefix + rankCommon);
-			break;
-		case 2:
-			totalLore.add(LorePrefix2 + rankPrefix + rankUncommon);
-			break;
-		case 3:
-			totalLore.add(LorePrefix2 + rankPrefix + rankRare);
-			break;
-		case 4:
-			totalLore.add(LorePrefix2 + rankPrefix + rankLegendary);
-			break;
+			case 1:
+				totalLore.add(LorePrefix2 + rankPrefix + rankCommon);
+				break;
+			case 2:
+				totalLore.add(LorePrefix2 + rankPrefix + rankUncommon);
+				break;
+			case 3:
+				totalLore.add(LorePrefix2 + rankPrefix + rankRare);
+				break;
+			case 4:
+				totalLore.add(LorePrefix2 + rankPrefix + rankLegendary);
+				break;
 		}
-		for (String s2 : potentialLore) {
-			totalLore.add(s2);
+		if(im.getPersistentDataContainer().has(p_lockline, PersistentDataType.INTEGER)) {
+			potentialLore.remove(2);
+			switch(im.getPersistentDataContainer().get(p_lockline, PersistentDataType.INTEGER)) {
+				case 1:
+					for(String s5 : oldlore) {
+						if(s5.contains(LockPotential.Locked)) {
+							String temp = s5.replace(LockPotential.Locked, "");
+							totalLore.add(temp);
+						}
+					}
+					totalLore.add(potentialLore.get(0));
+					totalLore.add(potentialLore.get(1));
+					break;
+				case 2:
+					totalLore.add(potentialLore.get(0));
+					for(String s5 : oldlore) {
+						if(s5.contains(LockPotential.Locked)) {
+							String temp = s5.replace(LockPotential.Locked, "");
+							totalLore.add(temp);
+						}
+					}
+					totalLore.add(potentialLore.get(1));
+					break;
+				case 3:
+					totalLore.add(potentialLore.get(0));
+					totalLore.add(potentialLore.get(1));
+					for(String s5 : oldlore) {
+						if(s5.contains(LockPotential.Locked)) {
+							String temp = s5.replace(LockPotential.Locked, "");
+							totalLore.add(temp);
+						}
+					}
+					break;
+			}
+		}
+		else {
+			for(String s2 : potentialLore) {
+				totalLore.add(s2);
+			}
 		}
 		for (String s3 : oldlore) {
 			if (!s3.startsWith(LorePrefix) && !s3.startsWith(LorePrefix2) && !s3.equals(LoreLine)) {

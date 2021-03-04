@@ -42,6 +42,8 @@ public class Commands implements CommandExecutor{
 	public static String PotentialItemCantUseThisMaterial = CreatePotentialItem.setStringColor(Main.pMessages.getString("Messages.SystemMessages.PotentialItemCantUseThisMaterial"));
 	public static String ItemPotentialRankUp = CreatePotentialItem.setStringColor(Main.pMessages.getString("Messages.SystemMessages.ItemPotentialRankUp"));
 	public static String MaterialRankUp = CreatePotentialItem.setStringColor(Main.pMessages.getString("Messages.SystemMessages.MaterialRankUp"));
+	public static String LockItem = CreatePotentialItem.setStringColor(Main.pMessages.getString("Messages.SystemMessages.LockItem"));
+	public static String AlreadyLocked = CreatePotentialItem.setStringColor(Main.pMessages.getString("Messages.SystemMessages.AlreadyLocked"));
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String cmdLabel, String[] args) {
@@ -52,11 +54,9 @@ public class Commands implements CommandExecutor{
 			if(sender instanceof Player) {
 				Player p = (Player) sender;
 				int i = Integer.parseInt(args[1]);
-				System.out.println(i);
 				ItemStack is = p.getInventory().getItemInMainHand();
 				CreatePotentialItem.setAvailablePotentialKey(is, yes);
 				CreatePotentialItem.setSlotPotentialKey(is, i);
-				System.out.println(CreatePotentialItem.checkSlotPotentialKey(is));
 				CreatePotentialItem.setRankPotentialKey(is, (byte)1);
 				p.sendMessage(MessagePrefix + setItem + PotentialItem);
 				switch(i) {
@@ -286,8 +286,21 @@ public class Commands implements CommandExecutor{
 			Main.pMessages = YamlConfiguration.loadConfiguration(new File(Main.getPlugin().getDataFolder() + File.separator + "messages.yml"));
 			Main.getPlugin().getServer().getPluginManager().registerEvents(new CreatePotentialItem(), Main.getPlugin());
 			CreatePotentialItem.init();
+			LockPotential.init();
 			Bukkit.getLogger().info("[Potential] Plugin is loaded");
 			sender.sendMessage(MessagePrefix + "reload completed!");
+		}
+		
+		if(args[0].equalsIgnoreCase("lock")) {
+			if(sender instanceof Player) {
+				Player p = (Player)sender;
+				ItemStack is = p.getInventory().getItemInMainHand();
+				CreatePotentialItem.setLockKey(is, 1);
+				p.sendMessage(MessagePrefix + setItem + LockItem);
+			}
+			else {
+				sender.sendMessage(MessagePrefix + onlyPlayer);
+			}
 		}
 		return true;
 	}

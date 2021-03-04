@@ -5,6 +5,9 @@ Messages:
         LoreLine: "&f=============================="
         ItemRankLorePrefix: "&f潛能等級: "
         ResultItem: "&6&l潛能附加"
+        LockResultItem1: "&e鎖定第 &a1 &e排潛能"
+        LockResultItem2: "&e鎖定第 &a2 &e排潛能"
+        LockResultItem3: "&e鎖定第 &a3 &e排潛能"
 
     ItemRankLore:
         Common: "&f普通"
@@ -13,6 +16,7 @@ Messages:
         Legendary: "&6傳說"
 
     GUITitle: "&4裝備/武器潛能"
+    LockGUITitle: "&5裝備/武器潛能鎖定"
 
     SystemMessages:
         Prefix: "&a[&ePotential&a] "
@@ -33,6 +37,11 @@ Messages:
         PotentialItemCantUseThisMaterial: "&c此道具無法使用此潛能素材"
         ItemPotentialRankUp: "&a已提升此道具的潛能等級"
         MaterialRankUp: "&a已提升此潛能素材的等級"
+        LockItem: "&d潛能鎖定素材"
+        NotHasPotentials: "&c此道具尚未附加潛能"
+        Locked: "&c (已鎖定)"
+        Unlock: ""
+        AlreadyLocked: "&c此道具已鎖定潛能"
     
     
     

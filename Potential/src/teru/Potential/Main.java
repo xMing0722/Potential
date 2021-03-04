@@ -24,7 +24,9 @@ public class Main extends JavaPlugin{
 		pMessages = YamlConfiguration.loadConfiguration(new File(Main.getPlugin().getDataFolder() + File.separator + "messages.yml"));
 		getCommand("poten").setExecutor((CommandExecutor) new Commands());
 		getServer().getPluginManager().registerEvents(new CreatePotentialItem(), plugin);
+		getServer().getPluginManager().registerEvents(new LockPotential(), plugin);
 		CreatePotentialItem.init();
+		LockPotential.init();
 		Bukkit.getLogger().info("[Potential] Plugin is loaded");
 	}
 

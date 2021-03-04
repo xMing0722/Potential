@@ -67,8 +67,33 @@ public class AttachPotential{
 		List<AttributeModifier> old_kr = new ArrayList<AttributeModifier>();
 		List<AttributeModifier> old_ms = new ArrayList<AttributeModifier>();
 		
+		UUID newUUID = UUID.randomUUID();
+		String newUUIDStr = newUUID.toString();
+		String oldUUIDStr = "";
+		
 		try{
 			if(pdc.has(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING)) {
+				
+				if(pdc.has(CreatePotentialItem.p_lockline, PersistentDataType.INTEGER)) {
+					
+					switch(pdc.get(CreatePotentialItem.p_lockline, PersistentDataType.INTEGER)) {
+						case 1:
+							oldUUIDStr = pdc.get(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING);
+							pdc.set(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING, newUUIDStr);
+							is.setItemMeta(im);
+							break;
+						case 2:
+							oldUUIDStr = pdc.get(CreatePotentialItem.p_attrUUID2, PersistentDataType.STRING);
+							pdc.set(CreatePotentialItem.p_attrUUID2, PersistentDataType.STRING, newUUIDStr);
+							is.setItemMeta(im);
+							break;
+						case 3:
+							oldUUIDStr = pdc.get(CreatePotentialItem.p_attrUUID3, PersistentDataType.STRING);
+							pdc.set(CreatePotentialItem.p_attrUUID3, PersistentDataType.STRING, newUUIDStr);
+							is.setItemMeta(im);
+							break;
+					}
+				}
 				
 				Set<String> attrUUIDs = new HashSet<String>();
 				attrUUIDs.add(pdc.get(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING));
@@ -129,56 +154,138 @@ public class AttachPotential{
 		catch(Exception e) {
 			
 		}
+		
+		if(pdc.has(CreatePotentialItem.p_lockline, PersistentDataType.INTEGER)) {
+			potentialList.remove(2);
+		}
 
-
-		for (int i = 0; i < 3; i++) {
-			ItemData id = potentialList.get(i);
-			String str = id.getPotential();
-			UUID uuid = UUID.randomUUID();
-			switch (str) {
-			case "armor":
-				g_armor.add(new AttributeModifier(uuid, "generic.armor", id.getNumber(),
-						AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
-				break;
-			case "at":
-				at.add(new AttributeModifier(uuid, "generic.armorToughness", id.getNumber(),
-						AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
-				break;
-			case "hp":
-				g_hp.add(new AttributeModifier(uuid, "generic.maxHealth", id.getNumber(),
-						AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
-				break;
-			case "ad":
-				ad.add(new AttributeModifier(uuid, "generic.attackDamage", id.getNumber() + 1.0D,
-						AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
-				break;
-			case "as":
-				as.add(new AttributeModifier(uuid, "generic.attackSpeed", id.getNumber(),
-						AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
-				break;
-			case "kr":
-				kr.add(new AttributeModifier(uuid, "generic.knockbackResistance", id.getNumber(),
-						AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
-				break;
-			case "ms":
-				ms.add(new AttributeModifier(uuid, "generic.movementSpeed", id.getNumber(),
-						AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
-				break;
-			}
-			
-			String uuidStr = uuid.toString();
-			switch(i) {
-				case 0:
-					pdc.set(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING, uuidStr);
+		if(potentialList.size() == 2) {
+			for (int i = 0; i < 2; i++) {
+				ItemData id = potentialList.get(i);
+				String str = id.getPotential();
+				UUID uuid = UUID.randomUUID();
+				switch (str) {
+				case "armor":
+					g_armor.add(new AttributeModifier(uuid, "generic.armor", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
 					break;
+				case "at":
+					at.add(new AttributeModifier(uuid, "generic.armorToughness", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "hp":
+					g_hp.add(new AttributeModifier(uuid, "generic.maxHealth", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "ad":
+					ad.add(new AttributeModifier(uuid, "generic.attackDamage", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "as":
+					as.add(new AttributeModifier(uuid, "generic.attackSpeed", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "kr":
+					kr.add(new AttributeModifier(uuid, "generic.knockbackResistance", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "ms":
+					ms.add(new AttributeModifier(uuid, "generic.movementSpeed", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				}
+				
+				String uuidStr = uuid.toString();
+				switch(pdc.get(CreatePotentialItem.p_lockline, PersistentDataType.INTEGER)) {
+					case 1:
+						if(i == 0) {
+							pdc.set(CreatePotentialItem.p_attrUUID2, PersistentDataType.STRING, uuidStr);
+						}
+						else if(i == 1) {
+							pdc.set(CreatePotentialItem.p_attrUUID3, PersistentDataType.STRING, uuidStr);
+						}
+						break;
+					case 2:
+						if(i == 0) {
+							pdc.set(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING, uuidStr);
+						}
+						else if(i == 1) {
+							pdc.set(CreatePotentialItem.p_attrUUID3, PersistentDataType.STRING, uuidStr);
+						}
+						break;
+					case 3:
+						if(i == 0) {
+							pdc.set(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING, uuidStr);
+						}
+						else if(i == 1) {
+							pdc.set(CreatePotentialItem.p_attrUUID2, PersistentDataType.STRING, uuidStr);
+						}
+						break;
+				}
+			}
+			switch(pdc.get(CreatePotentialItem.p_lockline, PersistentDataType.INTEGER)) {
 				case 1:
-					pdc.set(CreatePotentialItem.p_attrUUID2, PersistentDataType.STRING, uuidStr);
+					pdc.set(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING, oldUUIDStr);
 					break;
 				case 2:
-					pdc.set(CreatePotentialItem.p_attrUUID3, PersistentDataType.STRING, uuidStr);
+					pdc.set(CreatePotentialItem.p_attrUUID2, PersistentDataType.STRING, oldUUIDStr);
+					break;
+				case 3:
+					pdc.set(CreatePotentialItem.p_attrUUID3, PersistentDataType.STRING, oldUUIDStr);
 					break;
 			}
 		}
+		else {
+			for (int i = 0; i < 3; i++) {
+				ItemData id = potentialList.get(i);
+				String str = id.getPotential();
+				UUID uuid = UUID.randomUUID();
+				switch (str) {
+				case "armor":
+					g_armor.add(new AttributeModifier(uuid, "generic.armor", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "at":
+					at.add(new AttributeModifier(uuid, "generic.armorToughness", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "hp":
+					g_hp.add(new AttributeModifier(uuid, "generic.maxHealth", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "ad":
+					ad.add(new AttributeModifier(uuid, "generic.attackDamage", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "as":
+					as.add(new AttributeModifier(uuid, "generic.attackSpeed", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "kr":
+					kr.add(new AttributeModifier(uuid, "generic.knockbackResistance", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				case "ms":
+					ms.add(new AttributeModifier(uuid, "generic.movementSpeed", id.getNumber(),
+							AttributeModifier.Operation.MULTIPLY_SCALAR_1, equip));
+					break;
+				}
+				
+				String uuidStr = uuid.toString();
+				switch(i) {
+					case 0:
+						pdc.set(CreatePotentialItem.p_attrUUID1, PersistentDataType.STRING, uuidStr);
+						break;
+					case 1:
+						pdc.set(CreatePotentialItem.p_attrUUID2, PersistentDataType.STRING, uuidStr);
+						break;
+					case 2:
+						pdc.set(CreatePotentialItem.p_attrUUID3, PersistentDataType.STRING, uuidStr);
+						break;
+				}
+			}
+		}
+		
 		
 		for(AttributeModifier amd : old_g_armor) {
 			g_armor.add(amd);
@@ -201,7 +308,11 @@ public class AttachPotential{
 		for(AttributeModifier amd : old_ms) {
 			ms.add(amd);
 		}
-
+		
+		if(pdc.has(CreatePotentialItem.p_lockline, PersistentDataType.INTEGER)) {
+			pdc.remove(CreatePotentialItem.p_lockline);
+		}
+		
 		im.setAttributeModifiers(amf);
 		is.setItemMeta(im);
 	}
